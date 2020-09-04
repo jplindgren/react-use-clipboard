@@ -7,12 +7,22 @@ interface IOptions {
    * for showing a temporary success message.
    */
   successDuration?: number;
+  /**
+   * Enable output to console.
+   */
+  debug?: boolean;
+  /**
+   * Set the MIME type of what you want to copy as.
+   * Use text/html to copy as HTML, text/plain to avoid
+   * inherited styles showing when pasted into rich text editor.
+   */
+  format?: string;
 }
 
-export default function useCopyClipboard(
-  text: string,
+export default function useCopyToClipboard(
+  initialContent: string,
   options?: IOptions
-): [boolean, () => void] {
+): [boolean, (content?: string, onError?: (ex: Error) => void) => void] {
   const [isCopied, setIsCopied] = useState(false);
   const successDuration = options && options.successDuration;
 
@@ -28,11 +38,19 @@ export default function useCopyClipboard(
     }
   }, [isCopied, successDuration]);
 
-  return [
-    isCopied,
-    () => {
-      const didCopy = copy(text);
-      setIsCopied(didCopy);
+  const copyToClipboard = (content?: string, onError?: (ex: Error) => void) => {
+    try {
+      // copy(content || initialContent, { debug: options?.debug, format: options?.format });
+      copy(content || initialContent);
+      setIsCopied(true);
+    } catch (ex) {
+      setIsCopied(false);
+      // onError?.(ex);
+      if (onError) {
+        onError(ex);
+      }
     }
-  ];
+  };
+
+  return [isCopied, copyToClipboard];
 }

@@ -1,19 +1,16 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { cleanup, fireEvent, render, act } from "@testing-library/react";
-import useClipboard from "./index";
+import useClipboard from "./original";
 
 afterEach(cleanup);
 
-describe("new useClipboard", () => {
+describe("original useClipboard", () => {
   test("display sucess message if the copy worked", () => {
     const Component = () => {
-      const [isCopied, copyToClipboard] = useClipboard("Default Text to copy");
-      const handleCopy = useCallback(() => {
-        copyToClipboard();
-      }, [copyToClipboard]);
+      const [isCopied, setCopied] = useClipboard("Text to copy");
 
       return (
-        <button onClick={handleCopy} data-testid="btn-example">
+        <button onClick={setCopied} data-testid="btn-example">
           {isCopied ? "Yes" : "Nope"}
         </button>
       );
@@ -35,16 +32,12 @@ describe("new useClipboard", () => {
       const successDuration = 1000;
 
       const Component = () => {
-        const [isCopied, copyToClipboard] = useClipboard("Text to copy", {
+        const [isCopied, setCopied] = useClipboard("Text to copy", {
           successDuration
         });
 
-        const handleCopy = useCallback(() => {
-          copyToClipboard();
-        }, [copyToClipboard]);
-
         return (
-          <button onClick={handleCopy} data-testid="btn-example">
+          <button onClick={setCopied} data-testid="btn-example">
             {isCopied ? "Yes" : "Nope"}
           </button>
         );
@@ -76,13 +69,10 @@ describe("new useClipboard", () => {
       jest.useFakeTimers();
 
       const Component = () => {
-        const [isCopied, copyToClipboard] = useClipboard("Text to copy", {});
-        const handleCopy = useCallback(() => {
-          copyToClipboard();
-        }, [copyToClipboard]);
+        const [isCopied, setCopied] = useClipboard("Text to copy", {});
 
         return (
-          <button onClick={handleCopy} data-testid="btn-example">
+          <button onClick={setCopied} data-testid="btn-example">
             {isCopied ? "Yes" : "Nope"}
           </button>
         );

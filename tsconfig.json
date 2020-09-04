@@ -2,7 +2,8 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
-    "strict": true
+    "strict": true,
+    "declaration": true
   },
   "exclude": ["node_modules"]
 }
